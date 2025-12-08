@@ -8,11 +8,11 @@ export const questions = [
     imageUrl: '/images/danny_tree.jpeg',
     correctAnswer: 'Danny',
   },
-//   {
-//     id: 2,
-//     imageUrl: '/images/bob_tree.jpg',
-//     correctAnswer: 'Niall',
-//   },
+  {
+    id: 2,
+    imageUrl: '/images/niall_tree.jpeg',
+    correctAnswer: 'Niall',
+  },
   {
     id: 3,
     imageUrl: '/images/brendy_tree.jpg',
