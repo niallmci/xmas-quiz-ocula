@@ -6,7 +6,7 @@ export const questions = [
   {
     id: 1,
     imageUrl: '/images/danny_tree.jpeg',
-    correctAnswer: 'Danny',
+    correctAnswer: 'Dannyyy',
   },
   {
     id: 2,
