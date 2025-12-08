@@ -1,0 +1,46 @@
+// src/data/questions.js
+// Add your team members' trees here!
+// Image naming: name_tree.jpg (e.g., john_tree.jpg, sarah_tree.jpg)
+
+export const questions = [
+  {
+    id: 1,
+    imageUrl: '/images/danny_tree.jpeg',
+    correctAnswer: 'Danny',
+  },
+//   {
+//     id: 2,
+//     imageUrl: '/images/bob_tree.jpg',
+//     correctAnswer: 'Niall',
+//   },
+  {
+    id: 3,
+    imageUrl: '/images/brendy_tree.jpg',
+    correctAnswer: 'Brendy',
+  },
+  {
+    id: 4,
+    imageUrl: '/images/ronan_tree.jpg',
+    correctAnswer: 'Ronan',
+  },
+  {
+    id: 5,
+    imageUrl: '/images/alex_tree.jpg',
+    correctAnswer: 'Alex',
+  },
+  {
+    id: 6,
+    imageUrl: '/images/oscar_tree.jpg',
+    correctAnswer: 'Oscar',
+  },
+  // Add more team members...
+  // Example:
+  // {
+  //   id: 6,
+  //   imageUrl: '/images/niall_tree.jpg',
+  //   correctAnswer: 'Niall',
+  // },
+];
+
+// Generate all name options from the correct answers
+export const allNames = questions.map(q => q.correctAnswer);
