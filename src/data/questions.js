@@ -49,6 +49,11 @@ export const questions = [
     imageUrl: '/images/dean_tree.jpg',
     correctAnswer: 'Dean',
   },
+  {
+    id: 10,
+    imageUrl: '/images/ioanna_tree.jpg',
+    correctAnswer: 'Ioanna',
+  },
   // Add more team members...
   // Example:
   // {
