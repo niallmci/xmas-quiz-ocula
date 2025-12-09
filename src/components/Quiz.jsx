@@ -37,12 +37,29 @@ export default function Quiz() {
   };
 
   const handleAnswer = (questionId, answer) => {
+    const currentAnswer = answers[questionId];
+    
+    // If clicking the same answer, deselect it
+    if (currentAnswer === answer) {
+      setAnswers(prev => {
+        const newAnswers = { ...prev };
+        delete newAnswers[questionId];
+        return newAnswers;
+      });
+      return;
+    }
+    
+    // Check if this question already had an answer (user is changing their answer)
+    const hadPreviousAnswer = currentAnswer !== undefined;
+    
     setAnswers(prev => ({ ...prev, [questionId]: answer }));
-  };
-
-  const handleNext = () => {
-    if (currentIndex < shuffledQuestions.length - 1) {
-      setCurrentIndex(prev => prev + 1);
+    
+    // Only auto-advance if this is a NEW answer (not changing an existing one)
+    // and not the last question
+    if (!hadPreviousAnswer && currentIndex < shuffledQuestions.length - 1) {
+      setTimeout(() => {
+        setCurrentIndex(prev => prev + 1);
+      }, 300);
     }
   };
 
@@ -79,13 +96,13 @@ export default function Quiz() {
   // Check if all questions have been answered
   const allAnswered = shuffledQuestions.every(q => answers[q.id]);
   const currentQuestion = shuffledQuestions[currentIndex];
-  const hasCurrentAnswer = currentQuestion && answers[currentQuestion.id];
+  const isLastQuestion = currentIndex === shuffledQuestions.length - 1;
 
   if (!started) {
     return (
       <div className="start-screen">
         <div className="logo-container">
-          <img src="/ocula-logo.png" alt="Ocula Technologies" className="company-logo" />
+          <img src={`${import.meta.env.BASE_URL}ocula-logo.png`} alt="Ocula Technologies" className="company-logo" />
         </div>
         
         <div className="start-card">
@@ -138,6 +155,8 @@ export default function Quiz() {
         score={calculateScore()} 
         total={questions.length}
         playerName={playerName}
+        questions={shuffledQuestions}
+        answers={answers}
       />
     );
   }
@@ -145,7 +164,7 @@ export default function Quiz() {
   return (
     <div className="quiz-screen">
       <div className="quiz-header">
-        <img src="/ocula-logo.png" alt="Ocula" className="quiz-logo" />
+        <img src={`${import.meta.env.BASE_URL}ocula-logo.png`} alt="Ocula" className="quiz-logo" />
       </div>
       <QuizQuestion
         question={currentQuestion}
@@ -168,18 +187,7 @@ export default function Quiz() {
           Previous
         </button>
         
-        {currentIndex < shuffledQuestions.length - 1 ? (
-          <button 
-            onClick={handleNext}
-            disabled={!hasCurrentAnswer}
-            className="nav-button next-button"
-          >
-            Next
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m9 18 6-6-6-6"/>
-            </svg>
-          </button>
-        ) : (
+        {isLastQuestion && (
           <button 
             onClick={handleFinish}
             disabled={!allAnswered}

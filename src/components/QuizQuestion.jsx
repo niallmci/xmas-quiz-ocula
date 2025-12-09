@@ -32,7 +32,7 @@ export default function QuizQuestion({
       
       <div className="image-container">
         <img 
-          src={question.imageUrl} 
+          src={`${import.meta.env.BASE_URL}${question.imageUrl.replace(/^\//, '')}`} 
           alt="Whose tree is this?" 
           className="question-image"
         />
