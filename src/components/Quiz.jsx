@@ -155,8 +155,6 @@ export default function Quiz() {
         score={calculateScore()} 
         total={questions.length}
         playerName={playerName}
-        questions={shuffledQuestions}
-        answers={answers}
       />
     );
   }

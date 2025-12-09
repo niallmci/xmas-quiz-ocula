@@ -1,6 +1,7 @@
 // src/components/Admin.jsx
 import { useState } from 'react';
 import { getScores, ADMIN_PASSWORD } from '../utils/api';
+import { questions } from '../data/questions';
 
 export default function Admin() {
   const [password, setPassword] = useState('');
@@ -8,6 +9,7 @@ export default function Admin() {
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
 
   const handleLogin = async () => {
     if (password === ADMIN_PASSWORD) {
@@ -34,6 +36,14 @@ export default function Admin() {
     if (e.key === 'Enter') {
       handleLogin();
     }
+  };
+
+  const handleViewAnswers = (playerData) => {
+    setSelectedPlayer(playerData);
+  };
+
+  const handleCloseAnswers = () => {
+    setSelectedPlayer(null);
   };
 
   if (!authenticated) {
@@ -77,6 +87,89 @@ export default function Admin() {
         <div className="loading-spinner">
           <div className="spinner"></div>
           <p>Loading scores...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show answer breakdown if a player is selected
+  if (selectedPlayer) {
+    let playerAnswers = {};
+    try {
+      playerAnswers = typeof selectedPlayer.answers === 'string' 
+        ? JSON.parse(selectedPlayer.answers) 
+        : selectedPlayer.answers || {};
+    } catch (e) {
+      playerAnswers = {};
+    }
+
+    // Create a map of question ID to question for easy lookup
+    const questionMap = {};
+    questions.forEach(q => {
+      questionMap[q.id] = q;
+    });
+
+    return (
+      <div className="admin-container">
+        <div className="admin-panel">
+          <div className="admin-header">
+            <h1>{selectedPlayer.playerName}'s Answers</h1>
+            <button onClick={handleCloseAnswers} className="back-button">
+              ← Back to Leaderboard
+            </button>
+          </div>
+
+          <div className="player-score-summary">
+            <div className="summary-stat">
+              <span className="summary-label">Score</span>
+              <span className="summary-value">{selectedPlayer.score}/{selectedPlayer.total}</span>
+            </div>
+            <div className="summary-stat">
+              <span className="summary-label">Percentage</span>
+              <span className="summary-value">{selectedPlayer.percentage}%</span>
+            </div>
+            <div className="summary-stat">
+              <span className="summary-label">Date</span>
+              <span className="summary-value">
+                {selectedPlayer.timestamp ? new Date(selectedPlayer.timestamp).toLocaleString() : '-'}
+              </span>
+            </div>
+          </div>
+
+          <div className="breakdown-list">
+            {questions.map((question, index) => {
+              const userAnswer = playerAnswers[question.id];
+              const isCorrect = userAnswer === question.correctAnswer;
+              const imageUrl = `${import.meta.env.BASE_URL}${question.imageUrl.replace(/^\//, '')}`;
+              
+              return (
+                <div key={question.id} className={`breakdown-item ${isCorrect ? 'correct' : 'incorrect'}`}>
+                  <div className="breakdown-thumbnail">
+                    <img src={imageUrl} alt={`Question ${index + 1}`} />
+                  </div>
+                  <div className="breakdown-info">
+                    <div className="breakdown-status">
+                      {isCorrect ? (
+                        <span className="status-correct">✓ Correct</span>
+                      ) : (
+                        <span className="status-incorrect">✗ Wrong</span>
+                      )}
+                    </div>
+                    <div className="breakdown-answer">
+                      <span className="your-answer">
+                        You said: <strong>{userAnswer || 'No answer'}</strong>
+                      </span>
+                      {!isCorrect && (
+                        <span className="correct-answer">
+                          Answer: <strong>{question.correctAnswer}</strong>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
@@ -129,6 +222,7 @@ export default function Admin() {
                   <th>Score</th>
                   <th>%</th>
                   <th>Time</th>
+                  <th>Answers</th>
                 </tr>
               </thead>
               <tbody>
@@ -148,6 +242,14 @@ export default function Admin() {
                       <td className="time-cell">
                         {s.timestamp ? new Date(s.timestamp).toLocaleDateString() : '-'}
                       </td>
+                      <td>
+                        <button 
+                          onClick={() => handleViewAnswers(s)}
+                          className="view-answers-button"
+                        >
+                          View Answers
+                        </button>
+                      </td>
                     </tr>
                   ))}
               </tbody>
@@ -158,4 +260,3 @@ export default function Admin() {
     </div>
   );
 }
-
