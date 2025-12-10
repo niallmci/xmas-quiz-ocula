@@ -10,7 +10,7 @@ export const questions = [
   },
   {
     id: 2,
-    imageUrl: '/images/niall_tree.jpeg',
+    imageUrl: '/images/niall_tree.jpg',
     correctAnswer: 'Niall',
   },
   {
