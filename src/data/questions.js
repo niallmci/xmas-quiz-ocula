@@ -90,6 +90,12 @@ export const questions = [
     imageUrl: '/images/gary_tree.jpg',
     correctAnswer: 'Gary',
   },
+  {
+    id: 18,
+    imageUrl: '/images/belfast_office_tree.jpg',
+    correctAnswer: 'Belfast office',
+
+  }
   // Add more team members...
   // Example:
   // {
